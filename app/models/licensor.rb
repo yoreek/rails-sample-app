@@ -10,4 +10,5 @@ class Licensor < ActiveRecord::Base
   }
 
   belongs_to :reseller
+  has_many :licenses
 end
