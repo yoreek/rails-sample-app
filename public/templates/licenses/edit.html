@@ -1,0 +1,17 @@
+<div class="col-md-10">
+  <form class="tab-pane active form-horizontal" id="first" name="licenseForm" novalidate ng-submit="update()">
+    <h3 class="block">Edit License</h3>
+    <hr>
+    <div ng-include src="'/templates/licenses/_form.html'"></div>
+    <div class="panel-group">
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="pull-left">
+            <button type="submit" class="btn btn-primary btn-success" ng-click="submitted=true">Update</button>
+            <a class="btn btn-default" href="#/licenses">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

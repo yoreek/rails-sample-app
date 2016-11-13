@@ -1,0 +1,126 @@
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">License information</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm.name.$invalid}">
+          <label class="control-label col-md-4"><span class="required">* </span>Name</label>
+          <div class="col-md-6">
+            <input type="text" name="name" class="form-control" ng-model="license.name" ng-minlength="3" ng-maxlength="255" required placeholder="Name"/>
+            <p ng-hide="true" ng-show="submitted && licenseForm.name.$error.required" class="help-block">Name is required.</p>
+            <p ng-show="submitted && licenseForm.name.$error.minlength" class="help-block">Name is too short.</p>
+            <p ng-show="submitted && licenseForm.name.$error.maxlength" class="help-block">Name is too long.</p>
+          </div>
+        </div>
+        <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm.licensing_type.$invalid}">
+          <label class="control-label col-md-4"><span class="required">* </span>Type</label>
+          <div class="col-md-6">
+            <select name="licensing_type" class="form-control" ng-model="license.licensing_type" ng-options="k as v for (k,v) in licensing_type_options">
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm.sku.$invalid}">
+            <label class="control-label col-md-4"><span class="required">* </span>SKU</label>
+            <div class="col-md-6">
+              <input type="text" name="sku" class="form-control" ng-model="license.sku" ng-minlength="1" ng-maxlength="255" required placeholder="SKU"/>
+              <p ng-show="submitted && licenseForm.sku.$error.required && submitted" class="help-block">SKU is required.</p>
+              <p ng-show="submitted && licenseForm.sku.$error.minlength && submitted" class="help-block">SKU is too short.</p>
+              <p ng-show="submitted && licenseForm.sku.$error.maxlength && submitted" class="help-block">SKU is too long.</p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">License fee</div>
+    <div class="panel-body">
+      <table class="table">
+        <thead>
+          <tr><th>Fee</th><th>Start Date</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="fee in license.license_fees">
+            <td ng-hide="fee._destroy">
+              <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm['amount' + {{$index}}].$invalid}">
+                <input type="number" step="1" min="0.01" class="form-control" name="amount{{$index}}" ng-model="fee.amount" placeholder="Fee" required/>
+                <p ng-show="submitted && licenseForm['amount' + {{$index}}].$error.required" class="help-block">Fee is required.</p>
+                <p ng-show="submitted && licenseForm['amount' + {{$index}}].$error.number" class="help-block">Fee is not valid number.</p>
+                <p ng-show="submitted && licenseForm['amount' + {{$index}}].$error.min" class="help-block">Fee must be greater than or equal 0.01.</p>
+              </div>
+            </td>
+            <td ng-hide="fee._destroy">
+              <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm['start_date' + {{$index}}].$invalid}">
+                <input type="date" class="form-control" name="start_date{{$index}}" ng-model="fee.start_date" placeholder="YYYY-MM-DD" required/>
+                <p ng-show="submitted && licenseForm['start_date' + {{$index}}].$error.required" class="help-block">Start date is required.</p>
+                <p ng-show="submitted && licenseForm['start_date' + {{$index}}].$error.date" class="help-block">Start date is not valid.</p>
+              </div>
+            </td>
+            <td ng-hide="fee._destroy">
+                <a ng-click="removeFee($index, license)" class="btn btn-xs btn-danger">Remove</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-body">
+      <button type="button" ng-click="addFee()" class="btn btn-lg btn-outline-success btn-block btn-secondary">+ Add fee</button>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Mapping</div>
+    <div class="panel-body">
+        <div class="row" ng-hide="mapping._destroy" ng-repeat="mapping in license.license_mappings">
+          <div class="form-group">
+            <label class="control-label col-md-2"><span class="required">* </span>Mapping type</label>
+            <div class="form-inline col-md-2">
+              <label>
+                <input name="mappable_type{{$index}}" type="radio" class="form-control"
+                  ng-disabled="plan_disabled"
+                  ng-model="mapping.mappable_type"
+                  value="Plan">
+                Plan
+              </label><br/>
+              <label>
+                <input name="mappable_type{{$index}}" type="radio" class="form-control"
+                  ng-disabled="plan_disabled"
+                  ng-model="mapping.mappable_type"
+                  value="PlanResource">
+                Resource
+              </label>
+            </div>
+            <div class="col-md-3"
+              ng-class="{'has-error' : submitted && licenseForm['plan' + {{$index}}].$invalid}">
+              <select name="plan{{$index}}" class="form-control" required
+                ng-model="mapping.plan.selected"
+                ng-options="item as item.name for item in plan_options"
+                ng-change="planChanged(mapping.plan.selected, mapping)">
+                <option selected disabled value="">-- Select plan --</option>
+              </select>
+              <p ng-show="submitted && licenseForm['plan' + {{$index}}].$error.required" class="help-block">Plan is required.</p>
+            </div>
+            <div class="col-md-3"
+              ng-show="mapping.mappable_type == 'PlanResource'"
+              ng-class="{'has-error' : submitted && licenseForm['plan_resource' + {{$index}}].$invalid}">
+              <select name="plan_resource{{$index}}" class="form-control"
+                ng-required="mapping.mappable_type == 'PlanResource'"
+                ng-model="mapping.plan.resource.selected"
+                ng-options="item as item.name for item in mapping.plan.resource.options">
+                <option selected disabled value="">-- Select resource --</option>
+              </select>
+              <p ng-show="submitted && licenseForm['plan_resource' + {{$index}}].$error.required" class="help-block">Resource is required.</p>
+            </div>
+            <div ng-hide="fee._destroy">
+                <a ng-click="removeMapping($index, license)" class="btn btn-xs btn-danger">Remove</a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="panel-body">
+      <button type="button" ng-click="addMapping()" class="btn btn-lg btn-outline-success btn-block btn-secondary">+ Add mapping</button>
+    </div>
+  </div>
+</div>

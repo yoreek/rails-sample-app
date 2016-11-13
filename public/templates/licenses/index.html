@@ -1,0 +1,24 @@
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-primary" href="#/licenses/new">Create a license</a>
+        <h3 class="block">Licenses</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            <tr ng-hide="licenses.length" >
+                <td colspan="5">No licenses found, Please create one.</td>
+            </tr>
+            <tr ng-show="licenses.length" ng-repeat="license in licenses">
+                <td>{{license.name}}</td>
+                <td>{{license.status}}</td>
+                <td>
+                    <a href="#/licenses/{{license.id}}/edit">Edit</a> | <a href="" ng-click="deleteLicense(license.id)">Remove</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

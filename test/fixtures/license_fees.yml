@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_date: 2016-11-10
+  amount: 9.99
+  license_id: 
+
+two:
+  start_date: 2016-11-10
+  amount: 9.99
+  license_id: 
