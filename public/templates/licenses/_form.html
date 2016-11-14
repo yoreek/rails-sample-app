@@ -44,7 +44,7 @@
         <tbody>
           <tr ng-repeat="fee in license.license_fees">
             <td ng-hide="fee._destroy">
-              <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm['amount' + {{$index}}].$invalid}">
+              <div class="form-group col-md-8" ng-class="{'has-error' : submitted && licenseForm['amount' + {{$index}}].$invalid}">
                 <input type="number" step="1" min="0.01" class="form-control" name="amount{{$index}}" ng-model="fee.amount" placeholder="Fee" required/>
                 <p ng-show="submitted && licenseForm['amount' + {{$index}}].$error.required" class="help-block">Fee is required.</p>
                 <p ng-show="submitted && licenseForm['amount' + {{$index}}].$error.number" class="help-block">Fee is not valid number.</p>
@@ -52,7 +52,7 @@
               </div>
             </td>
             <td ng-hide="fee._destroy">
-              <div class="form-group col-md-6" ng-class="{'has-error' : submitted && licenseForm['start_date' + {{$index}}].$invalid}">
+              <div class="form-group col-md-8" ng-class="{'has-error' : submitted && licenseForm['start_date' + {{$index}}].$invalid}">
                 <input type="date" class="form-control" name="start_date{{$index}}" ng-model="fee.start_date" placeholder="YYYY-MM-DD" required/>
                 <p ng-show="submitted && licenseForm['start_date' + {{$index}}].$error.required" class="help-block">Start date is required.</p>
                 <p ng-show="submitted && licenseForm['start_date' + {{$index}}].$error.date" class="help-block">Start date is not valid.</p>

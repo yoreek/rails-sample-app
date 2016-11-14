@@ -45,8 +45,23 @@ app.factory('Plans', ['$resource',function($resource){
 
 // Controller
 app.controller("LicenseListCtr", ['$scope', '$http', '$resource', 'Licenses', 'License', '$location', function($scope, $http, $resource, Licenses, License, $location) {
+  s = $scope;
 
   $scope.licenses = Licenses.query();
+
+  var today = new Date().toISOString().substr(0, 7);
+  $scope.period = {
+    from: today,
+    to: today,
+    re: '\\d{4}-\\d{2}'
+  };
+
+  $scope.download = function () {
+    if ($scope.reportForm.$valid) {
+      document.reportForm.setAttribute('action', 'licenses.xls');
+      document.reportForm.submit();
+    }
+  };
 
   $scope.deleteLicense = function (licenseId) {
     if (confirm("Are you sure you want to delete this license?")){
@@ -61,8 +76,6 @@ app.controller("LicenseListCtr", ['$scope', '$http', '$resource', 'Licenses', 'L
 app.controller("LicenseAddCtr",
   ['$scope', '$resource', 'Licenses', 'Plans', '$location',
   function($scope, $resource, Licenses, Plans, $location) {
-
-  s = $scope;
 
   $scope.license = {
     licensor_id:        1,

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Report">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Licensor</Data></Cell>
+        <Cell><Data ss:Type="String">License</Data></Cell>
+        <Cell><Data ss:Type="String">Account</Data></Cell>
+        <Cell><Data ss:Type="String">Charges</Data></Cell>
+        <Cell><Data ss:Type="String">License Fee</Data></Cell>
+      </Row>
+    <% @results.each do |row| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= row['licensor'] %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row['license'] %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row['account'] %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= row['charges'] %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= row['license_fee'] %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

@@ -1,19 +1,23 @@
 # Licenses controller
 class LicensesController < ApplicationController
   before_action :set_license, except: [:index, :create]
-  respond_to :html, :json
+  respond_to :html, :json, :xls
 
   def index
-    @license = License.all
     respond_with do |format|
-      format.json { render json: @license.as_json }
+      format.json { render json: License.all.as_json }
       format.html
+      format.xls {
+        period = report_period
+        @results = ActiveRecord::Base.connection.select_all(
+          ActiveRecord::Base.send(:sanitize_sql_array, [report_query, *period])
+        ).to_hash
+      }
     end
   end
 
   def create
     @license = License.new(license_params)
-    p license_params
     if @license.save
       render json: @license.as_json, status: :ok
     else
@@ -39,6 +43,34 @@ class LicensesController < ApplicationController
   end
 
   private
+
+  def report_period
+    from = Date.parse(params.require(:from) + '-01').to_s
+    to = Date.parse(params.require(:to) + '-01').end_of_month.to_s
+    [from, to]
+  end
+
+  def report_query
+    <<~SQL
+      SELECT lr.name as licensor, l.name as license, a.name as account,
+             SUM(c.amount) as charges,
+             SUM(f.amount) as license_fee
+      FROM licenses l
+      INNER JOIN licensors lr ON (l.licensor_id = lr.id)
+      LEFT JOIN license_fees f ON (l.id = f.license_id)
+      INNER JOIN license_mappings m ON (m.license_id = l.id)
+      LEFT JOIN plan_resources r
+        ON (m.mappable_type = 'PlanResource' AND m.mappable_id = r.id)
+      LEFT JOIN subscriptions s
+        ON (s.plan_id = CASE WHEN m.mappable_type = 'Plan'
+                             THEN m.mappable_id ELSE r.plan_id
+                        END)
+      LEFT JOIN accounts a ON (a.id = s.account_id)
+      LEFT JOIN charges c on (c.subscription_id = s.id)
+      WHERE c.operate_from BETWEEN ? AND ?
+      GROUP BY lr.id, l.id, a.id
+    SQL
+  end
 
   def license_params
     license = params.require(:license)
