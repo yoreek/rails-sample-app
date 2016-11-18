@@ -6,7 +6,7 @@ class CreateCharges < ActiveRecord::Migration
       t.integer :status, default: 0
       t.date :operate_from
       t.date :operate_to
-      t.belongs_to :subscription, index: true, foreign_key: true
+      t.references :subscription, index: true, foreign_key: true
     end
   end
 end

@@ -4,7 +4,7 @@ class CreateLicensors < ActiveRecord::Migration
     create_table :licensors do |t|
       t.string :name
       t.integer :status, default: 0
-      t.belongs_to :reseller, index: true, foreign_key: true
+      t.references :reseller, index: true, foreign_key: true
     end
   end
 end

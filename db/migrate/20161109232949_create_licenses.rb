@@ -5,7 +5,7 @@ class CreateLicenses < ActiveRecord::Migration
       t.string :name
       t.integer :licensing_type, default: 0
       t.integer :status, default: 0
-      t.belongs_to :licensor, index: true, foreign_key: true
+      t.references :licensor, index: true, foreign_key: true
     end
   end
 end
